@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Home - Google Drive</title>
-<link rel="icon" href="Apps/classroom logo.png">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/ghxst-dev63/arcticos@main/Apps/classroom%20logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -86,7 +86,7 @@
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   --shadow-glow: 0 0 40px rgba(167, 139, 250, 0.15);
   --win-bg: rgba(5, 10, 20, 0.95);
-  --wallpaper: url('Apps/wallpaper.jpg');
+  --wallpaper: url('https://cdn.jsdelivr.net/gh/ghxst-dev63/arcticos@main/Apps/wallpaper.jpg');
 }
 
 [data-theme="ocean"] {
@@ -2584,6 +2584,61 @@ body { transition: background 0.5s ease; }
 <div class="dock" id="dock"></div>
 
 <script>
+// ================= CDN LOADER =================
+// Everything in the Apps/ folder is pulled from this jsDelivr repo.
+// jsDelivr serves .html as text/plain, so HTML apps are fetched as text,
+// given a <base> tag (so their own relative files resolve to the CDN),
+// and run from a blob: URL inside the window's iframe.
+const CDN_BASE = "https://cdn.jsdelivr.net/gh/ghxst-dev63/arcticos@main/";
+
+// Turn "Apps/foo bar.png" into a full CDN URL. Anything else passes through.
+function R(path) {
+  if (typeof path !== 'string' || !/^Apps\//i.test(path)) return path;
+  let p = path;
+  try { p = decodeURI(path); } catch (e) {}
+  return CDN_BASE + encodeURI(p).replace(/#/g, '%23').replace(/\?/g, '%3F');
+}
+
+const cdnBlobCache = {};
+async function loadCdnHtml(url) {
+  if (cdnBlobCache[url]) return cdnBlobCache[url];
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  let html = await res.text();
+  const dir = url.slice(0, url.lastIndexOf('/') + 1);
+  if (!/<base\s/i.test(html)) {
+    const tag = '<base href="' + dir + '">';
+    if (/<head[^>]*>/i.test(html)) html = html.replace(/<head[^>]*>/i, m => m + tag);
+    else if (/<html[^>]*>/i.test(html)) html = html.replace(/<html[^>]*>/i, m => m + '<head>' + tag + '</head>');
+    else html = tag + html;
+  }
+  const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  cdnBlobCache[url] = blobUrl;
+  return blobUrl;
+}
+
+// Called after a window is in the DOM: fills in any <iframe data-app-src>.
+function hydrateAppFrames(root) {
+  root.querySelectorAll('iframe[data-app-src]').forEach(async frame => {
+    const raw = frame.getAttribute('data-app-src');
+    frame.removeAttribute('data-app-src');
+    const url = R(raw);
+    if (!/^Apps\//i.test(raw) || !/\.html?($|[?#])/i.test(raw)) {
+      frame.src = url;            // external site or non-HTML file: load directly
+      return;
+    }
+    try {
+      frame.src = await loadCdnHtml(url);
+    } catch (err) {
+      console.error('arcticOS: could not load', url, err);
+      frame.srcdoc = '<body style="font-family:sans-serif;padding:24px;color:#444">' +
+        '<h3>Couldn\'t load this app</h3><p>' + String(err.message || err) +
+        '</p><p style="font-size:13px;word-break:break-all">' + url + '</p></body>';
+    }
+  });
+}
+// ==============================================
+
 // Default apps that are always installed
 const DEFAULT_APPS = {
   browser: {
@@ -3116,6 +3171,7 @@ const STORE_APPS = {
 
 // Combine all apps for easy access
 let ALL_APPS = { ...DEFAULT_APPS, ...STORE_APPS };
+Object.values(ALL_APPS).forEach(a => { if (a && a.icon) a.icon = R(a.icon); });
 
 // Theme definitions
 const THEMES = {
@@ -4620,7 +4676,7 @@ function executeTerminalCommand(input) {
 // The system default wallpaper. Used as the ultimate fallback any time
 // state.wallpaper is empty/null and the current theme doesn't define its
 // own wallpaper (none currently do) — so the desktop is never left blank.
-const DEFAULT_WALLPAPER = 'Apps/wallpaper.jpg';
+const DEFAULT_WALLPAPER = R('Apps/wallpaper.jpg');
 
 let state = {
   user: null,
@@ -4688,7 +4744,7 @@ function defaultEnv() {
 function applyEnvVisuals() {
   document.body.setAttribute('data-theme', state.theme || 'forest');
   const wall = document.getElementById('wall');
-  if (state.wallpaper) wall.style.backgroundImage = `url(${state.wallpaper})`;
+  if (state.wallpaper) wall.style.backgroundImage = `url(${R(state.wallpaper)})`;
   else if (THEMES[state.theme]?.wallpaper) wall.style.backgroundImage = `url(${THEMES[state.theme].wallpaper})`;
   else wall.style.backgroundImage = `url(${DEFAULT_WALLPAPER})`;
   const dock = document.getElementById('dock');
@@ -4822,7 +4878,7 @@ function loadState() {
   // was ever cleared out).
   const wall = document.getElementById('wall');
   if (state.wallpaper) {
-    wall.style.backgroundImage = `url(${state.wallpaper})`;
+    wall.style.backgroundImage = `url(${R(state.wallpaper)})`;
   } else if (THEMES[state.theme]?.wallpaper) {
     wall.style.backgroundImage = `url(${THEMES[state.theme].wallpaper})`;
   } else {
@@ -5363,7 +5419,7 @@ function spawnWindow(key, isRestore = false) {
   if (app.isCustom) {
     bodyContent = `<iframe src="${customAppUrl(key, app)}"></iframe>`;
   } else if (app.src) {
-    bodyContent = `<iframe src="${app.src}"></iframe>`;
+    bodyContent = `<iframe data-app-src="${String(app.src).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"></iframe>`;
   } else if (app.type === 'notes') {
     const safeNotes = (state.notes || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
     bodyContent = `<textarea id="note-text" class="notes-area" placeholder="Start typing..." oninput="saveState()">${safeNotes}</textarea>`;
@@ -5430,6 +5486,7 @@ function spawnWindow(key, isRestore = false) {
   activeWindows[key] = win;
   initWindowInteractions(win);
   document.body.appendChild(win);
+  hydrateAppFrames(win);
 
   focusWindow(win);
   requestAnimationFrame(() => {
@@ -6301,7 +6358,7 @@ function resetWallpaper() {
   } else {
     state.wallpaper = DEFAULT_WALLPAPER;
   }
-  wall.style.backgroundImage = `url(${state.wallpaper})`;
+  wall.style.backgroundImage = `url(${R(state.wallpaper)})`;
 
   saveState();
 
