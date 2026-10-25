@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhxstGames Catalog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #04070b;
+      --bg2: #09131b;
+      --bg3: #061018;
+      --text: #eff9ff;
+      --muted: #9cb5c4;
+      --accent: #8bf5d6;
+      --accent2: #7ec9ff;
+      --glass: rgba(255, 255, 255, 0.06);
+      --glass-strong: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+      --transition: 220ms cubic-bezier(.22, 1, .36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 18%, rgba(126, 201, 255, 0.16), transparent 28%),
+        radial-gradient(circle at 82% 12%, rgba(139, 245, 214, 0.15), transparent 24%),
+        radial-gradient(circle at 76% 82%, rgba(192, 138, 255, 0.12), transparent 26%),
+        linear-gradient(145deg, var(--bg1) 0%, var(--bg2) 48%, var(--bg3) 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 88px 88px;
+      mask-image: radial-gradient(circle at center, black 42%, transparent 88%);
+      opacity: 0.38;
+    }
+
+    button,
+    input {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4.2px);
+      -webkit-backdrop-filter: blur(4.2px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4.2px);
+      -webkit-backdrop-filter: blur(4.2px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1360px, calc(100% - 28px));
+      margin: 14px auto;
+      padding: 18px;
+    }
+
+    .toolbar,
+    .player-shell,
+    .section {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .player-shell {
+      display: none;
+      gap: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .player-shell.is-open {
+      display: grid;
+    }
+
+    .player-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .player-copy {
+      min-width: 0;
+    }
+
+    .player-kicker {
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .player-title {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+      letter-spacing: -0.04em;
+    }
+
+    .player-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .player-btn {
+      padding: 11px 14px;
+      min-height: 44px;
+    }
+
+    .player-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .frame-wrap {
+      position: relative;
+      overflow: hidden;
+      min-height: 72vh;
+      border-radius: 20px;
+      background: rgba(4, 10, 15, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .game-frame {
+      width: 100%;
+      height: 72vh;
+      border: 0;
+      display: none;
+      background: #020408;
+    }
+
+    .player-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 72vh;
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+      line-height: 1.7;
+    }
+
+    .player-shell.is-loaded .game-frame {
+      display: block;
+    }
+
+    .player-shell.is-loaded .player-placeholder {
+      display: none;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1 1 360px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 14px;
+      transition: border-color var(--transition), transform var(--transition), background var(--transition);
+    }
+
+    .search:focus-within {
+      border-color: rgba(139, 245, 214, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .search svg {
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .search input {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      outline: 0;
+    }
+
+    .search input::placeholder {
+      color: rgba(239, 249, 255, 0.45);
+    }
+
+    .clear-btn,
+    .alpha-btn,
+    .launch-btn {
+      transition:
+        transform var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        color var(--transition),
+        box-shadow var(--transition);
+    }
+
+    .clear-btn {
+      padding: 12px 16px;
+      color: var(--text);
+    }
+
+    .clear-btn:hover,
+    .alpha-btn:hover,
+    .launch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .stat strong {
+      color: var(--text);
+    }
+
+    .alphabet {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+      gap: 8px;
+    }
+
+    .alpha-btn {
+      min-height: 44px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .alpha-btn.has-games {
+      color: var(--text);
+    }
+
+    .alpha-btn.active {
+      color: #041217;
+    }
+
+    .catalog {
+      display: grid;
+      gap: 16px;
+    }
+
+    .section {
+      padding: 16px;
+    }
+
+    .section.hidden {
+      display: none;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .section-head h2 {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      letter-spacing: -0.05em;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+    }
+
+    .launch-btn {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px;
+      text-align: left;
+      color: var(--text);
+    }
+
+    .launch-btn.hidden {
+      display: none;
+    }
+
+    .title-wrap {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .title-wrap strong {
+      font-size: 0.97rem;
+      line-height: 1.25;
+    }
+
+    .title-wrap small {
+      color: var(--muted);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      align-content: flex-start;
+      max-width: 42%;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 14px, 1360px);
+        margin: 7px auto;
+        padding: 8px;
+      }
+
+      .toolbar,
+      .player-shell,
+      .section {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .search-row {
+        align-items: stretch;
+      }
+
+      .clear-btn {
+        width: 100%;
+      }
+
+      .launch-btn {
+        flex-direction: column;
+      }
+
+      .tags {
+        justify-content: flex-start;
+        max-width: none;
+      }
+
+      .game-frame,
+      .frame-wrap,
+      .player-placeholder {
+        min-height: 62vh;
+        height: 62vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="toolbar glass">
+      <div class="search-row">
+        <label class="search glass" for="searchInput">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input id="searchInput" type="text" autocomplete="off" placeholder="Search the catalog...">
+        </label>
+        <button class="clear-btn glass" id="clearSearch" type="button">Clear Search</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="alphabet" id="alphabetNav"></div>
+    </section>
+
+    <section class="player-shell glass" id="playerShell">
+      <div class="player-bar">
+        <div class="player-copy">
+          <div class="player-kicker">Now Playing</div>
+          <div class="player-title" id="playerTitle">Select a game from the catalog</div>
+        </div>
+        <div class="player-actions">
+          <button class="player-btn" id="fullscreenGame" type="button">Fullscreen</button>
+          <button class="player-btn" id="openInTab" type="button">Launch In New Tab</button>
+          <button class="player-btn" id="reloadGame" type="button">Reload Game</button>
+          <button class="player-btn" id="closeGame" type="button">Close Game</button>
+        </div>
+      </div>
+      <div class="frame-wrap" id="frameWrap">
+        <div class="player-placeholder" id="playerPlaceholder">Pick any title from the alphabet catalog and it will open right here in the page.</div>
+        <iframe class="game-frame" id="gameFrame" title="GhxstGames Player" loading="eager" referrerpolicy="no-referrer"></iframe>
+      </div>
+    </section>
+
+    <section class="catalog" id="catalog"></section>
+  </main>
+
+  <script>
+    const CDN_BASE = "https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile/UGS-Files/";
+    const LETTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+    const TITLE_OVERRIDES = {
+      "clcookie-clicker": "Cookie Clicker",
+      "clbitlife": "BitLife",
+      "clbuildnowgg": "BuildNow GG",
+      "cliwbtg": "I Wanna Be The Guy",
+      "clpvz": "Plants vs Zombies",
+      "cluno": "UNO",
+      "closu": "osu!",
+      "clovo": "OvO",
+      "clgta": "GTA",
+      "clfnac1": "FNAC 1",
+      "clfnaf": "FNAF",
+      "clfnaf2": "FNAF 2",
+      "clfnaf3": "FNAF 3",
+      "clfnaf4": "FNAF 4",
+      "clpokemonunbound": "Pokemon Unbound",
+      "clpokewhite2": "Pokemon White 2",
+      "clsupermario64": "Super Mario 64",
+      "clplantsvszombies": "Plants vs Zombies",
+      "clsubwaysurferssanfrancisco": "Subway Surfers San Francisco",
+      "eaglercraft.1.5.2": "Eaglercraft 1.5.2",
+      "EaglercraftX 1.8.8(u29)": "EaglercraftX 1.8.8",
+      "marbleracer": "Marble Racer",
+      "mariobuilder64": "Mario Builder 64",
+      "rocketknight2": "Rocket Knight 2",
+      "vvvvvv": "VVVVVV"
+    };
+
+    const CATEGORY_MAP = [
+      { tags: ["Shooter", "FPS"], keys: ["doom", "cs", "bullet", "shooter", "gun", "war", "strike", "quake", "wolfenstein", "fnaf"] },
+      { tags: ["Racing", "Cars"], keys: ["drift", "race", "racer", "kart", "motox", "traffic", "wheel", "drive", "car", "road"] },
+      { tags: ["Puzzle", "Casual"], keys: ["2048", "sugar", "tetris", "wordle", "plinko", "trap", "bloxorz", "portal", "checkers", "chess"] },
+      { tags: ["Retro", "Adventure"], keys: ["zelda", "mario", "kirby", "sonic", "metroid", "pokemon", "contra", "chrono", "megaman", "rayman"] },
+      { tags: ["Horror", "Story"], keys: ["fnaf", "granny", "backrooms", "fear", "silent", "undertale", "doki", "shrek"] },
+      { tags: ["Sports", "Arcade"], keys: ["soccer", "football", "basket", "tennis", "golf", "pool", "boxing", "wrestle", "volley"] },
+      { tags: ["Platformer", "Arcade"], keys: ["run", "vex", "slope", "jump", "wheely", "redball", "celeste", "fancypants"] },
+      { tags: ["Simulation", "Sandbox"], keys: ["clicker", "idle", "mart", "life", "craft", "town", "garden", "sandbox"] }
+    ];
+
+    const RAW_GAME_FILES = `cl1on1soccer,cl1v1lol,cl2048,cl2048cupcakes,cl8ballpool,clabandoned3,clADarkRoom,cladventurecapitalist,clagariolite,clageofwar,clalienhominid,clamongus,clangrybirds,clanimalcrossingwildworld,clarceuslegend,clarena,clasteroids,clattackhole,clbackrooms,clbackyardbaseball,clbaconmaydie,clbadicecream,clbadpiggies,clbaldisbasics,clballblast,clbanjokazooie,clbankrobbery2,clbasketballlegends,clbasketballstars,clbasketbros,clbasketrandom,clbattlekarts,clbearbarians,clbigshotboxing2,clbitlife,clbitplanes,clblackjack,clblastronaut,clbleachvsnaruto,clblockblast,clblockpost,clbloons,clbloonsTD5,clbloxorz,clbobtherobber,clboomslingers,clboxhead2playrooms,clboxingrandom,clbridgerace,clbubbletanks,clbuckshotroulette,clbuildnowgg,clburgerandfrights,clburritobison,clbushidoblade,clcactusmccoy,clcapybaraclicker,clcarcrash3,clcarmods,clcastlewarsmodern,clcatmario,clcavestory,clceleste,clchaosfaction2,clcheckers,clchess,clchronotrigger,clclusterrush,clcodenamegordon,clcolorburst3d,clcontra,clcookie-clicker,clcookingmama,clcoreball,clcoverorange,clcrazycars,clcrossyroad,clcurveball,clcuttherope,cldeadestate,cldeadzed,cldecision,cldefendyourcastle,cldeepestsword,cldeltarune,cldiablo,cldiamondhollow,cldigdug,cldigtochina,cldogeminer,cldokidokiliteratureclub,cldonkeykongcountry,cldontescape,cldoodlejump,cldoom,cldoom2,cldoom64,cldragonballadvance,cldrawclimber,cldriftboss,cldrivemady,clducklife,clducklife2,clducklife3,clducklife4,cldukenukem3d,cldunkshot,clelectricman2,clendlesswar4,clepicbattlefantasy5,clescaperoad,clextremerun3d,clfactoryballs,clfallout,clfancypantsadventure,clfancypantsadventure2,clfearstofathomhomealone,clfeedus,clff6,clfifa2000,clfinalfantasy,clfinalninja,clfireboyandwatergirl,clfireboyandwatergirl2,clfireboyandwatergirl3,clfivenightsatshrekshotel,clfnac1,clFNAF,clFNAF2,clFNAF3,clFNAF4,clfnfhex,clfootballbros,clfootballlegends,clfortzone,clfreerider2,clfridaynightfunkin,clfruitninja,clfunnyshooter2,clgalaga,clgangsterbros,clgeometrydashscratch,clgetawayshootout,clgetontop,clghosttrick,clgloryhunters,clgooglebaseball,clgoogledino,clgranny,clgranny2,clgravity,clgrowagarden,clgta,clgunblood,clgunmayhem,clgunmayhem2,clgunmayhemredux,clhalflife,clhappywheels,clharvestmoon,clhauntthehouse,clhelixjump,clhextris,clhillclimbracinglite,clhobo,clhobo2,clhobo3,clholeio,clhollowknight,clhouseofhazards,clidlebreakout,clidlegamedev,clinfinitecraft,clinteractivebuddy,clironsnout,cliwbtg,cljacksmith,cljetpackjoyride,cljohnnytrigger,cljumpingshell,clkaratebros,clkarlson,clkartbros,clkillerinstinct,clkirby64,clknifehit,cllaststand,cllearntofly,cllearntofly2,cllearntofly3,clleveldevil,cllinerider,cllittlerunmo,clmadalinstuntcars,clmadden99,clmadnessinteractive,clmadskillsmotocross2,clmagictiles3,clmajorasmask,clmariokart64,clmarioparty,clmarioparty2,clmarioparty3,clmeatboyflash,clmegamanx,clmetalgearsolid,clmetalslugmission1,clmetroidfusion,clminecraft1-8-8,clminesweeperplus,clmonkeymart,clmonstertracks,clmortalkombat,clmotox3m2,clmotox3mspookyland,clmotherload,clmxoffroadmaster,clmyfriendpedro,clNBAjam,clnewgroundsrumble,clnewsupermariobros,clnflblitz,clnightfire,clninjabrawl,clnplus,clobbyonlyup,clocarinaoftime,clonlyup,cloregontrail,closu,clovo,clpacman,clpapasfreezeria,clpaperio,clpapermario,clparkingfury,clpeggle,clpenguindiner,clperfectdark,clpersona,clpico8,clpingpongchaos,clpixelcombat2,clpixelwarfare,clpizzatower,clplantsvszombies,clplazmaburst,clplinko,clpokeblack,clpokeblue,clpokemonemerald,clpokemonfirered,clpokemonleafgreen,clpokeplatinum,clpokemonunbound,clpokewhite,clpokewhite2,clportal,clportalflash,clpostal,clpou,clpunchout,clpvz,clquake2,clquake3,clqwop,clracemaster3d,clradicalred,clraftwars,clraftwars2,clragdollarchers,clrayman,clraze,clraze2,clredball,clredball4,clretrobowl,clretrobowlcollege,clreturntoriddleschool,clriddleschool,clriddleschool2,clriddleschool3,clroadofthedead,clroadofthedead2,clrocketleague,clroguesoul,clroguesoul2,clrooftopsnipers,clrooftopsnipers2,clrun,clrun2,clrun3,clsandboxels,clsandtris,clsaszombieassault2,clscrapmetal3,clscribblenauts,clsecretofmana,clsentryfortress,clsfk,clshift,clshift2,clshortlife,clsierra7,clsilenthill,clsixwaystodie,clslitherio,clslope,clslope2player,clslope3,clslowroads,clsmashkarts,clsnailbob,clsnakeis,clsnowrider,clsoccerbros,clsoccerrandom,clsolitaire,clsonicadvance,clsonicbattle,clsonicr,clspacecompany,clspaceinvaders,clspacewaves,clspeedstars,clsprunki,clstacktris,clstarfox64,clstation141,clstickmanhook,clstickwar,clstickwar2,clstreetfighter2,clstrikeforceheroes,clstrikeforceheroes2,clstrikeforceheroes3,clsubwaysurfersbarcelona,clsubwaysurfersbeijing,clsubwaysurfersberlin,clsubwaysurfershouston,clsubwaysurferslondon,clsubwaysurfersneworleans,clsubwaysurferssanfrancisco,clsubwaysurferszurich,clsugarsugar,clsuika,clsuperfighters,clsuperhot,clsupermario63,clsupermario64,clsupermariobros,clsupermariobros3,clsupermarioworld,clsupersmashbros,clsupersmashflash,clsupersmashflash2,clsurvevio,clswordplay,clswordsandsandals,clswordsandsandals2,clswordsandsouls,cltabletanks,cltabletennisworldtour,cltakeover,cltankmayhem,cltanukisunset,cltastyplanet,cltempleofboom,cltemplerun2,clterritorialio,cltetris,cltheenchantedcave2,cltheimpossiblegame,clthelaststand,clthelaststandunioncity,clthemaninthewindow,clthisistheonlylevel,clthreegoblets,cltimeshooter2,cltimeshooter3,cltinyfishing,cltmnt,cltonyhawkskater2,cltopspeedracing3d,cltosstheturtle,cltownscraper,cltrafficjam3d,cltrapthecat,cltunnelrush,cltwistedmetal,cltwoball3d,clultimateassassian2,clultimatemortalkombat3,clultrakill,clundertaler,cluno,clupgradecomplete,clupgradecomplete2,clvampiresurvivors,clvex,clvex2,clvex3,clvex4,clvex5,clvex6,clvex7,clvisitor,clvolleyrandom,clvvvvvv,clwarfare1944,clwaterpoolio,clwaverace64,clwebecomewhatwebehold,clwebfishing,clwhackyourboss,clwhackyourcomputer,clwheeliebike,clwheely,clwheely2,clwheely3,clwheely4,clwheely5,clwheely6,clwheely7,clwheely8,clwolfenstein3d,clwordle,clworldshardestgame,clworldshardestgame2,clworldshardestgame3,clwrassling,clwrestlebros,clyanderesimulator,clyarsrevenge,clyumenikki,clzelda2thelegendoflink,clzeldaminishcap,clzombotron,clzombotron2,clzuma,Eaglercraft-Alpha-1.2.6-Offline,Eaglercraft-Beta-1.3-Offline,eaglercraft.1.5.2,EaglercraftX 1.8.8(u29),marbleracer,mariobuilder64,mortalkombat4,polytrackbutnotflagged,rocketknight2,vvvvvv,wilywars`;
+
+    const uniqueFiles = Array.from(new Set(
+      RAW_GAME_FILES
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean)
+    ));
+
+    function normalizeFileName(name) {
+      if (/\.[a-z0-9]+$/i.test(name)) {
+        return name;
+      }
+      return name + ".html";
+    }
+
+    function titleCaseWord(word) {
+      if (!word) {
+        return "";
+      }
+      if (/^[A-Z0-9]+$/.test(word)) {
+        return word;
+      }
+      if (/^[a-z0-9]+$/.test(word) && word.length <= 4 && /\d/.test(word)) {
+        return word.toUpperCase();
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+
+    function humanizeFileName(file) {
+      if (TITLE_OVERRIDES[file]) {
+        return TITLE_OVERRIDES[file];
+      }
+
+      let clean = file.replace(/\.html$/i, "");
+      if (/^cl/i.test(clean) && clean.length > 2) {
+        clean = clean.slice(2);
+      }
+
+      return clean
+        .replace(/[_-]+/g, " ")
+        .replace(/\./g, " ")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/([A-Za-z])(\d)/g, "$1 $2")
+        .replace(/(\d)([A-Za-z])/g, "$1 $2")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split(" ")
+        .map(titleCaseWord)
+        .join(" ");
+    }
+
+    function guessTags(file, title) {
+      const haystack = (file + " " + title).toLowerCase();
+      const found = [];
+
+      for (const entry of CATEGORY_MAP) {
+        if (entry.keys.some((key) => haystack.includes(key.toLowerCase()))) {
+          for (const tag of entry.tags) {
+            if (!found.includes(tag)) {
+              found.push(tag);
+            }
+          }
+        }
+      }
+
+      if (!found.length) {
+        found.push("Arcade");
+      }
+
+      return found.slice(0, 3);
+    }
+
+    function createGame(file) {
+      const title = humanizeFileName(file);
+      const first = title.charAt(0).toUpperCase();
+      const letter = LETTERS.includes(first) ? first : "#";
+      return {
+        file,
+        title,
+        letter,
+        searchText: (title + " " + file).toLowerCase(),
+        tags: guessTags(file, title)
+      };
+    }
+
+    const games = uniqueFiles
+      .map(createGame)
+      .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: "base" }));
+
+    function buildGroups() {
+      const groups = Object.fromEntries(LETTERS.map((letter) => [letter, []]));
+      for (const game of games) {
+        if (groups[game.letter]) {
+          groups[game.letter].push(game);
+        }
+      }
+      return groups;
+    }
+
+    const groups = buildGroups();
+    let currentGameFile = "";
+
+    function updatePlayerButtons() {
+      const hasGame = Boolean(currentGameFile);
+      document.getElementById("fullscreenGame").disabled = !hasGame;
+      document.getElementById("openInTab").disabled = !hasGame;
+      document.getElementById("reloadGame").disabled = !hasGame;
+      document.getElementById("closeGame").disabled = !hasGame;
+    }
+
+    function renderAlphabetNav() {
+      const nav = document.getElementById("alphabetNav");
+      nav.innerHTML = "";
+
+      for (const letter of LETTERS) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "alpha-btn glass";
+        if (groups[letter].length) {
+          btn.classList.add("has-games");
+        }
+        btn.textContent = letter;
+        btn.dataset.target = "section-" + letter;
+
+        btn.addEventListener("click", () => {
+          const section = document.getElementById(btn.dataset.target);
+          if (section && !section.classList.contains("hidden")) {
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+
+        nav.appendChild(btn);
+      }
+    }
+
+    function renderCatalog() {
+      const catalog = document.getElementById("catalog");
+      catalog.innerHTML = "";
+
+      for (const letter of LETTERS) {
+        const section = document.createElement("section");
+        section.className = "section glass";
+        section.id = "section-" + letter;
+
+        const head = document.createElement("div");
+        head.className = "section-head";
+        head.innerHTML = "<h2>" + letter + "</h2><div class=\"count\">" + groups[letter].length + " games</div>";
+
+        const grid = document.createElement("div");
+        grid.className = "grid";
+
+        for (const game of groups[letter]) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "launch-btn glass";
+          btn.dataset.search = game.searchText;
+          btn.dataset.letter = letter;
+          btn.dataset.file = game.file;
+
+          const tags = game.tags.map((tag) => "<span class=\"tag\">" + tag + "</span>").join("");
+          btn.innerHTML =
+            "<div class=\"title-wrap\">" +
+              "<strong>" + escapeHtml(game.title) + "</strong>" +
+              "<small>" + escapeHtml(game.file) + "</small>" +
+            "</div>" +
+            "<div class=\"tags\">" + tags + "</div>";
+
+          btn.addEventListener("click", () => openGame(game.file));
+          grid.appendChild(btn);
+        }
+
+        section.appendChild(head);
+        section.appendChild(grid);
+        catalog.appendChild(section);
+      }
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function updateStats(visibleGames, visibleSections, query) {
+      const stats = document.getElementById("stats");
+      const searchState = query ? "Filtered" : "Showing";
+      stats.innerHTML = [
+        "<div class=\"stat glass\"><strong>" + games.length + "</strong> total games</div>",
+        "<div class=\"stat glass\"><strong>" + visibleGames + "</strong> visible games</div>",
+        "<div class=\"stat glass\"><strong>" + visibleSections + "</strong> active sections</div>",
+        "<div class=\"stat glass\">" + searchState + " catalog</div>"
+      ].join("");
+    }
+
+    function filterCatalog() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sections = Array.from(document.querySelectorAll(".section"));
+      const alphaButtons = Array.from(document.querySelectorAll(".alpha-btn"));
+
+      let visibleGames = 0;
+      let visibleSections = 0;
+
+      for (const section of sections) {
+        const buttons = Array.from(section.querySelectorAll(".launch-btn"));
+        let localVisible = 0;
+
+        for (const button of buttons) {
+          const match = !query || button.dataset.search.includes(query);
+          button.classList.toggle("hidden", !match);
+          if (match) {
+            localVisible += 1;
+            visibleGames += 1;
+          }
+        }
+
+        section.classList.toggle("hidden", localVisible === 0);
+        const count = section.querySelector(".count");
+        if (count) {
+          count.textContent = localVisible + " games";
+        }
+        if (localVisible > 0) {
+          visibleSections += 1;
+        }
+      }
+
+      for (const alpha of alphaButtons) {
+        const target = document.getElementById(alpha.dataset.target);
+        const visible = target && !target.classList.contains("hidden");
+        alpha.classList.toggle("active", Boolean(query) && visible);
+        alpha.style.opacity = visible ? "1" : "0.35";
+      }
+
+      updateStats(visibleGames, visibleSections, query);
+
+      const catalog = document.getElementById("catalog");
+      const existingEmpty = document.getElementById("emptyState");
+      if (!visibleGames) {
+        if (!existingEmpty) {
+          const empty = document.createElement("div");
+          empty.id = "emptyState";
+          empty.className = "empty glass";
+          empty.textContent = "No games match that search.";
+          catalog.appendChild(empty);
+        }
+      } else if (existingEmpty) {
+        existingEmpty.remove();
+      }
+    }
+
+    function setPlayerState({ open, loaded, title, message }) {
+      const playerShell = document.getElementById("playerShell");
+      const playerTitle = document.getElementById("playerTitle");
+      const playerPlaceholder = document.getElementById("playerPlaceholder");
+
+      playerShell.classList.toggle("is-open", open);
+      playerShell.classList.toggle("is-loaded", loaded);
+
+      if (title) {
+        playerTitle.textContent = title;
+      }
+
+      if (message) {
+        playerPlaceholder.textContent = message;
+      }
+
+      updatePlayerButtons();
+    }
+
+    async function openGame(file) {
+      const normalized = normalizeFileName(file);
+      const encoded = encodeURIComponent(normalized);
+      const playerShell = document.getElementById("playerShell");
+      const playerTitle = document.getElementById("playerTitle");
+      const gameFrame = document.getElementById("gameFrame");
+      currentGameFile = file;
+
+      setPlayerState({
+        open: true,
+        loaded: false,
+        title: humanizeFileName(file),
+        message: "Loading " + humanizeFileName(file) + "..."
+      });
+      playerShell.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      try {
+        const response = await fetch(CDN_BASE + encoded + "?t=" + Date.now());
+        if (!response.ok) {
+          throw new Error("Request failed with status " + response.status);
+        }
+
+        const text = await response.text();
+        gameFrame.srcdoc = text;
+        playerTitle.textContent = humanizeFileName(file);
+        setPlayerState({
+          open: true,
+          loaded: true,
+          title: humanizeFileName(file),
+          message: ""
+        });
+      } catch (error) {
+        document.getElementById("gameFrame").srcdoc = "";
+        setPlayerState({
+          open: true,
+          loaded: false,
+          title: humanizeFileName(file),
+          message: "Unable to open " + normalized + ". " + error.message
+        });
+      }
+    }
+
+    async function openGameInNewTab(file) {
+      const normalized = normalizeFileName(file);
+      const encoded = encodeURIComponent(normalized);
+
+      try {
+        const response = await fetch(CDN_BASE + encoded + "?t=" + Date.now());
+        if (!response.ok) {
+          throw new Error("Request failed with status " + response.status);
+        }
+
+        const text = await response.text();
+        const newWin = window.open("about:blank", "_blank");
+        if (!newWin) {
+          throw new Error("Pop-up blocked");
+        }
+
+        newWin.document.open();
+        newWin.document.write(text);
+        newWin.document.close();
+      } catch (error) {
+        alert("Unable to open " + normalized + " in a new tab. " + error.message);
+      }
+    }
+
+    function bindControls() {
+      const searchInput = document.getElementById("searchInput");
+      const clearButton = document.getElementById("clearSearch");
+      const fullscreenButton = document.getElementById("fullscreenGame");
+      const openInTabButton = document.getElementById("openInTab");
+      const reloadButton = document.getElementById("reloadGame");
+      const closeButton = document.getElementById("closeGame");
+      const gameFrame = document.getElementById("gameFrame");
+      const frameWrap = document.getElementById("frameWrap");
+
+      searchInput.addEventListener("input", filterCatalog);
+      clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        filterCatalog();
+        searchInput.focus();
+      });
+
+      fullscreenButton.addEventListener("click", async () => {
+        if (!currentGameFile) {
+          return;
+        }
+
+        try {
+          if (document.fullscreenElement === frameWrap) {
+            await document.exitFullscreen();
+            return;
+          }
+          await frameWrap.requestFullscreen();
+        } catch (error) {
+          alert("Unable to enter fullscreen. " + error.message);
+        }
+      });
+
+      openInTabButton.addEventListener("click", () => {
+        if (currentGameFile) {
+          openGameInNewTab(currentGameFile);
+        }
+      });
+
+      reloadButton.addEventListener("click", () => {
+        if (currentGameFile) {
+          openGame(currentGameFile);
+        }
+      });
+
+      closeButton.addEventListener("click", () => {
+        currentGameFile = "";
+        gameFrame.srcdoc = "";
+        setPlayerState({
+          open: false,
+          loaded: false,
+          title: "Select a game from the catalog",
+          message: "Pick any title from the alphabet catalog and it will open right here in the page."
+        });
+      });
+    }
+
+    renderAlphabetNav();
+    renderCatalog();
+    bindControls();
+    filterCatalog();
+    updatePlayerButtons();
+  </script>
+</body>
+</html>

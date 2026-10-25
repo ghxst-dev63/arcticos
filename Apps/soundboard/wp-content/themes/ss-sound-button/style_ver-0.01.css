@@ -1,0 +1,188 @@
+/*
+Theme Name: SoundButton
+*/
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* background-color set by Bootstrap theme */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.site-content-wrapper {
+    flex-grow: 1;
+}
+.section-title {
+    font-size: 2rem; /* Increased size */
+    font-weight: 800; /* Bolder */
+    margin-bottom: 2rem;
+    color: var(--bs-emphasis-color);
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--bs-primary-border-subtle); /* Theme-aware border */
+}
+.section-title-small {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--bs-emphasis-color);
+}
+
+footer { margin-top: auto; }
+
+.sound-button-main {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+    /* Neumorphic-inspired shadow, adjusted for theme */
+    background: var(--bs-body-bg); /* Ensure button bg matches page bg for neumorphic */
+    box-shadow:
+            -5px -5px 10px var(--bs-tertiary-bg),
+            5px 5px 10px var(--bs-secondary-bg);
+    position: relative;
+    overflow: hidden;
+}
+[data-bs-theme="dark"] .sound-button-main {
+    box-shadow:
+            -5px -5px 10px rgba(255, 255, 255, 0.05),
+            5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sound-button-name-link {
+    font-size: 0.8rem;
+    margin-top: 0.85rem;
+    color: var(--bs-body-color);
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    font-weight: 500;
+}
+.sound-button-name-link:hover {
+    color: var(--bs-primary);
+    text-decoration: underline;
+}
+
+#sidebarContent .card {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--bs-border-color-translucent);
+}
+#sidebarContent .list-group-item {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    background-color: transparent; /* For theme compatibility */
+    border-left:0; border-right:0;
+}
+#sidebarContent .list-group-item:first-child { border-top:0; }
+#sidebarContent .list-group-item:last-child { border-bottom:0; }
+#sidebarContent .list-group-item a {
+    text-decoration: none;
+    color: var(--bs-body-color);
+}
+#sidebarContent .list-group-item a:hover {
+    color: var(--bs-primary);
+}
+#sidebarContent .badge {
+    font-size: 0.7em;
+}
+
+#backToTopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    z-index: 1030; /* Below sticky header but above most content */
+}
+.faq-section .accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.sound-item {
+    width: 94px;
+    word-wrap: break-word;
+}
+.play-button-background {
+    width: 86px;
+    height: 84px;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+.play-button {
+    width: 94px;
+    height: 89px;
+    background: url(assets/images/button_sprites.png) no-repeat -5px -5px;
+    -webkit-tap-highlight-color: transparent;
+}
+.play-button.active {
+    background: url(assets/images/button_sprites.png) no-repeat -109px -5px;
+}
+.play-button-shadow {
+    width: 94px;
+    height: 89px;
+    background: url(assets/images/button_shadow.png) no-repeat;
+}
+.sound-item-link {
+    font-size: 14px;
+    line-height: 1.4em;
+}
+.sound-wrapper {
+    margin: 30px 0;
+    gap: 30px 10px
+}
+
+ul.sub-menu li::marker {
+	color: var(--bs-nav-link-color);
+}
+
+@media only screen and (min-width: 768px) {
+    ul.sub-menu {
+        display: none;
+        position: absolute;
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+    }
+
+    ul.sub-menu.active{
+        display:block !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-collapse.show, .navbar-collapse.collapsing {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+.navigation .nav-links {
+    display: flex;
+    justify-content: center;
+}
+.navigation .nav-links ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+}
+.navigation .nav-links ul li {
+    margin: 0 0.25rem;
+}
+.navigation .nav-links ul li a.current, .navigation .nav-links ul li a:hover, .navigation .nav-links ul li span.current, .navigation .nav-links ul li span:hover {
+    opacity: 1;
+}
+.navigation .nav-links ul li a, .navigation .nav-links ul li span {
+    padding: 0.25rem 0.75rem;
+    opacity: .5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #187b93;
+    text-decoration: none;
+    color: #fff !important;
+    border-radius: 10px;
+    border: none;
+}
