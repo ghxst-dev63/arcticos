@@ -5,28 +5,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>ArcticLauncher</title>
-    <link rel="icon" href="https://iili.io/nbhDyUF.png">
+    <title>StudentVUE</title>
+    <link rel="icon" href="https://ca-egusd-psv.edupoint.com/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Particles.js CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         :root {
-            --bg: #0c1929;
-            --bg-gradient: linear-gradient(135deg, #0c1929 0%, #164e63 50%, #0e2a3d 100%);
+            --bg: #000000;
+            --bg-gradient: #000000;
             --text: #e0f2fe;
-            --text-secondary: #7dd3fc;
-            --accent: #22d3ee;
-            --accent-glow: rgba(34, 211, 238, 0.4);
-            --glass: rgba(12, 30, 50, 0.65);
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --glass: rgba(15, 23, 42, 0.75);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-highlight: rgba(255, 255, 255, 0.05);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 40px rgba(34, 211, 238, 0.15);
-            --win-bg: rgba(10, 25, 40, 0.95);
-            --blur-amount: 20px;
-            --btn-close: #ff5f57;
-            --btn-minimize: #febc2e;
-            --btn-fullscreen: #28c840;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            --shadow-glow: 0 0 40px rgba(56, 189, 248, 0.15);
+            --win-bg: rgba(5, 5, 5, 0.95);
         }
 
         * {
@@ -44,17 +42,22 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
+            cursor: url('https://iili.io/fO1N8CX.png'), auto;
         }
 
-        /* Wallpaper */
+        /* Wallpaper & Particles */
         .wallpaper {
             position: fixed;
             inset: 0;
-            background: var(--bg-gradient);
-            background-size: cover;
-            background-position: center;
+            background: var(--bg);
             z-index: 0;
-            transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #particles-js {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: auto;
         }
 
         /* Launcher Container */
@@ -69,15 +72,16 @@
         }
 
         .launcher-card {
-            background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            padding: 40px 32px;
-            border-radius: 24px;
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(3.9px);
+            -webkit-backdrop-filter: blur(3.9px);
+            border: 1px solid rgba(255, 255, 255, 0.01);
             width: 100%;
             max-width: 440px;
             text-align: center;
+            padding: 36px 28px;
             box-shadow: var(--shadow), var(--shadow-glow), inset 0 1px 0 var(--glass-highlight);
             animation: cardFloat 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -99,7 +103,7 @@
             height: 52px;
             object-fit: contain;
             pointer-events: none;
-            filter: drop-shadow(0 4px 12px rgba(34, 211, 238, 0.3));
+            filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.3));
         }
 
         h1 {
@@ -121,6 +125,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            width: 100%;
         }
 
         .btn-service {
@@ -131,7 +136,7 @@
             border-radius: 14px;
             font-weight: 600;
             font-size: 0.95rem;
-            cursor: pointer;
+            cursor: url('https://iili.io/fO1NkQt.png'), pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
@@ -204,13 +209,50 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.12);
             border-radius: 16px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(3.9px);
+            -webkit-backdrop-filter: blur(3.9px);
+            border: 1px solid rgba(255, 255, 255, 0.01);
             z-index: 10000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .topbar.hidden {
+            transform: translateY(-70px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Topbar Drop-down Toggle Tab */
+        .topbar-toggle {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: none;
+            color: var(--text);
+            width: 48px;
+            height: 24px;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: url('https://iili.io/fO1NkQt.png'), pointer;
+            z-index: 9999;
+            transition: transform 0.3s ease, background 0.2s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .topbar-toggle.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .topbar-toggle:hover {
+            background: rgba(30, 41, 59, 0.95);
         }
 
         .service-badge {
@@ -244,9 +286,12 @@
             border-radius: 8px;
             font-size: 12px;
             font-weight: 500;
-            cursor: pointer;
+            cursor: url('https://iili.io/fO1NkQt.png'), pointer;
             transition: all 0.2s ease;
             font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-tool:hover {
@@ -270,8 +315,7 @@
             width: 100%;
             height: 100%;
             border: none;
-            background: white;
-            /* No padding-top so the iframe fills the viewport and the topbar floats directly on top of it */
+            background: #000;
         }
 
         @keyframes spin {
@@ -282,6 +326,7 @@
 <body>
 
     <div class="wallpaper"></div>
+    <div id="particles-js"></div>
 
     <!-- Selection Screen -->
     <div id="selection-screen" class="container">
@@ -306,7 +351,7 @@
 
     <!-- Main App View -->
     <div id="app-view">
-        <div class="topbar">
+        <div class="topbar" id="app-topbar">
             <div class="service-badge">
                 <div class="pulse-dot"></div>
                 <span id="active-service-display">Connected</span>
@@ -314,26 +359,127 @@
             <div class="toolbar-actions">
                 <button class="btn-tool" onclick="popOutAboutBlank()">Pop-out in New Tab</button>
                 <button class="btn-tool danger" onclick="exitApp()">Disconnect</button>
+                <button class="btn-tool" onclick="toggleTopbar()" title="Hide Topbar">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+                </button>
             </div>
         </div>
+        
+        <!-- Toggle Dropdown Button when hidden -->
+        <div class="topbar-toggle" id="topbar-toggle-btn" onclick="toggleTopbar()" title="Show Topbar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+
         <iframe id="proxy-frame" src=""></iframe>
     </div>
 
     <script>
+        // Initialize particles.js background with higher density, clearer lines, and repulsion
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 110, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.7, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 140,
+                    color: "#ffffff",
+                    opacity: 0.35,
+                    width: 1.2
+                },
+                move: {
+                    enable: true,
+                    speed: 1.5,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+
         const links = {
             tung: [
+                "https://s3.amazonaws.com/leeshawn/index.html",
+                "https://s3.us-east-1.amazonaws.com/leeshawn/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/leeshawn/index.html",
+                "https://leeshawn.s3.amazonaws.com/index.html",
+                "https://leeshawn.s3.us-east-1.amazonaws.com/index.html",
+                "https://leeshawn.s3.dualstack.us-east-1.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/vellaa/index.html",
+                "https://s3.us-east-1.amazonaws.com/vellaa/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/vellaa/index.html",
+                "https://vellaa.s3.amazonaws.com/index.html",
+                "https://vellaa.s3.us-east-1.amazonaws.com/index.html",
+                "https://vellaa.s3.dualstack.us-east-1.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/antixticy/index.html",
+                "https://antixticy.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/solaraos/index.html",
+                "https://solaraos.s3.amazonaws.com/index.html",
+                "https://solaraos.s3.us-east-1.amazonaws.com/index.html",
+                "https://solaraos.s3.dualstack.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/solaraos/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/solaraos/index.html",
+                "https://xn--w8jb2a9brj1p1a2176i.xyz/",
+                "https://xn--bf0bq5ds3a51m5pav3r43rw1couf1zbeg537k.xyz/",
+                "https://sillypup.cfd/",
+                "https://ralsei.cfd/",
+                "https://tungtung.baby/",
+                "https://my.tungtung.baby/",
+                "https://tactics.baby/",
+                "https://s3.amazonaws.com/leahh-5a8u/index.html",
+                "https://leahh-5a8u.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/lmeyo-cok1/index.html",
+                "https://lmeyo-cok1.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/ralsei/index.html",
+                "https://ralsei.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/lightspeeds/index.html",
+                "https://lightspeeds.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/caddyprep/index.html",
+                "https://d24vuz79mn2wf6.cloudfront.net/",
+                "https://tungtung.my",
+                "https://tungtung.wtf",
+                "https://tungtung.buzz",
                 "https://s3.amazonaws.com/tungnotes/index.html",
                 "https://tungnotes.s3.amazonaws.com/index.html",
                 "https://s3.amazonaws.com/cedarstudy/index.html",
                 "https://cedarstudy.s3.amazonaws.com/index.html",
+                "https://dd1hfh01dlqgu.cloudfront.net/",
+                "https://d2zobue1t3ey6b.cloudfront.net/",
+                "https://d1bb3w1h8fhcci.cloudfront.net/",
+                "https://legitisliterallyagoat.blackwood-designs.com/",
+                "https://titussmogsyouwithveins.enduringpowerofattorney.hk/",
+                "https://educationalmath.monumentaldisaster.com/",
+                "https://curlyfrieswhentheyarefried.swuethrich-metallwerkstatt.ch/",
+                "https://de65f25rwcp70.cloudfront.net/",
                 "https://s3.amazonaws.com/pinepractice/index.html",
                 "https://s3.us-east-1.amazonaws.com/pinepractice/index.html",
                 "https://s3-external-1.amazonaws.com/pinepractice/index.html",
-                "https://pinepractice.s3.amazonaws.com/index.html"
+                "https://pinepractice.s3.amazonaws.com/index.html",
+                "https://pinepractice.s3.us-east-1.amazonaws.com/index.html",
+                "https://pinepractice.s3-external-1.amazonaws.com/index.html"
             ],
             strawberii: [
                 "https://s3.amazonaws.com/strawberrii/index.html",
-                "https://s3.amazonaws.com/strawberrii/index.svg"
+                "https://strawberrii.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/strawberrii/index.svg",
+                "https://strawberrii.s3.amazonaws.com/index.svg"
             ]
         };
 
@@ -378,9 +524,21 @@
                 document.getElementById("app-view").style.display = "flex";
                 document.getElementById("proxy-frame").src = workingUrl;
                 document.getElementById("active-service-display").textContent = currentServiceName;
+                
+                // Reset topbar state
+                document.getElementById("app-topbar").classList.remove("hidden");
+                document.getElementById("topbar-toggle-btn").classList.remove("visible");
             } else {
                 statusText.textContent = "Connection failed. All endpoints are currently blocked.";
             }
+        }
+
+        function toggleTopbar() {
+            const topbar = document.getElementById("app-topbar");
+            const toggleBtn = document.getElementById("topbar-toggle-btn");
+            
+            topbar.classList.toggle("hidden");
+            toggleBtn.classList.toggle("visible");
         }
 
         function popOutAboutBlank() {
