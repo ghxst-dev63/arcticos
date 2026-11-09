@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="ocean">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ArcticLauncher</title>
+    <link rel="icon" href="https://iili.io/nbhDyUF.png">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c1929;
+            --bg-gradient: linear-gradient(135deg, #0c1929 0%, #164e63 50%, #0e2a3d 100%);
+            --text: #e0f2fe;
+            --text-secondary: #7dd3fc;
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.4);
+            --glass: rgba(12, 30, 50, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.05);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(34, 211, 238, 0.15);
+            --win-bg: rgba(10, 25, 40, 0.95);
+            --blur-amount: 20px;
+            --btn-close: #ff5f57;
+            --btn-minimize: #febc2e;
+            --btn-fullscreen: #28c840;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        /* Wallpaper */
+        .wallpaper {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-gradient);
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Launcher Container */
+        .container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .launcher-card {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 40px 32px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: var(--shadow), var(--shadow-glow), inset 0 1px 0 var(--glass-highlight);
+            animation: cardFloat 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes cardFloat {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .logo-container {
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 12px rgba(34, 211, 238, 0.3));
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-service {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            padding: 18px 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .btn-service:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-service:active {
+            transform: translateY(0);
+        }
+
+        /* Status & Loader Container */
+        .status-container {
+            margin-top: 24px;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--glass-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+            margin-bottom: 8px;
+        }
+
+        #status-text {
+            color: var(--text-secondary);
+            font-size: 0.825rem;
+        }
+
+        /* App View */
+        #app-view {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            background: var(--bg);
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Floating Rounded Topbar */
+        .topbar {
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            top: 16px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            z-index: 10000;
+        }
+
+        .service-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-tool {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-tool:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-tool.danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .btn-tool.danger:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            /* No padding-top so the iframe fills the viewport and the topbar floats directly on top of it */
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wallpaper"></div>
+
+    <!-- Selection Screen -->
+    <div id="selection-screen" class="container">
+        <div class="launcher-card">
+            <div class="logo-container">
+                <img src="https://iili.io/nbhDyUF.png" alt="ArcticLauncher Logo">
+            </div>
+            <h1>ArcticLauncher</h1>
+            <p class="subtitle">Select your endpoint below. Mirrors are tested automatically for availability.</p>
+            
+            <div class="service-grid">
+                <button class="btn-service" onclick="launchService('tung')">Tung Proxy</button>
+                <button class="btn-service" onclick="launchService('strawberii')">Strawberii</button>
+            </div>
+
+            <div class="status-container">
+                <div class="loader" id="loading-spinner"></div>
+                <div id="status-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App View -->
+    <div id="app-view">
+        <div class="topbar">
+            <div class="service-badge">
+                <div class="pulse-dot"></div>
+                <span id="active-service-display">Connected</span>
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn-tool" onclick="popOutAboutBlank()">Pop-out in New Tab</button>
+                <button class="btn-tool danger" onclick="exitApp()">Disconnect</button>
+            </div>
+        </div>
+        <iframe id="proxy-frame" src=""></iframe>
+    </div>
+
+    <script>
+        const links = {
+            tung: [
+                "https://s3.amazonaws.com/tungnotes/index.html",
+                "https://tungnotes.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/cedarstudy/index.html",
+                "https://cedarstudy.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/pinepractice/index.html",
+                "https://s3.us-east-1.amazonaws.com/pinepractice/index.html",
+                "https://s3-external-1.amazonaws.com/pinepractice/index.html",
+                "https://pinepractice.s3.amazonaws.com/index.html"
+            ],
+            strawberii: [
+                "https://s3.amazonaws.com/strawberrii/index.html",
+                "https://s3.amazonaws.com/strawberrii/index.svg"
+            ]
+        };
+
+        let currentActiveUrl = "";
+        let currentServiceName = "";
+
+        async function checkUrl(url) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500);
+                await fetch(url, { method: 'GET', mode: 'no-cors', signal: controller.signal });
+                clearTimeout(timeoutId);
+                return true;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        async function launchService(serviceType) {
+            const spinner = document.getElementById("loading-spinner");
+            const statusText = document.getElementById("status-text");
+            spinner.style.display = "block";
+            statusText.textContent = "Testing network route...";
+
+            const urlList = links[serviceType];
+            let workingUrl = null;
+
+            for (let url of urlList) {
+                const isWorking = await checkUrl(url);
+                if (isWorking) {
+                    workingUrl = url;
+                    break;
+                }
+            }
+
+            spinner.style.display = "none";
+
+            if (workingUrl) {
+                currentActiveUrl = workingUrl;
+                currentServiceName = serviceType === 'tung' ? 'Tung Proxy' : 'Strawberii';
+                document.getElementById("selection-screen").style.display = "none";
+                document.getElementById("app-view").style.display = "flex";
+                document.getElementById("proxy-frame").src = workingUrl;
+                document.getElementById("active-service-display").textContent = currentServiceName;
+            } else {
+                statusText.textContent = "Connection failed. All endpoints are currently blocked.";
+            }
+        }
+
+        function popOutAboutBlank() {
+            if (currentActiveUrl) {
+                const win = window.open('about:blank', '_blank');
+                if (win) {
+                    win.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title></title>
+                            <style>
+                                body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+                                iframe { width: 100%; height: 100%; border: none; }
+                            </style>
+                        </head>
+                        <body>
+                            <iframe src="${currentActiveUrl}"></iframe>
+                        </body>
+                        </html>
+                    `);
+                    win.document.close();
+                }
+            }
+        }
+
+        function exitApp() {
+            document.getElementById("app-view").style.display = "none";
+            document.getElementById("selection-screen").style.display = "flex";
+            document.getElementById("proxy-frame").src = "";
+            document.getElementById("status-text").textContent = "";
+            currentActiveUrl = "";
+        }
+    </script>
+</body>
+</html>
+
