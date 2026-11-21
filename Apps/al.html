@@ -79,7 +79,7 @@
             -webkit-backdrop-filter: blur(3.9px);
             border: 1px solid rgba(255, 255, 255, 0.01);
             width: 100%;
-            max-width: 440px;
+            max-width: 720px;
             text-align: center;
             padding: 36px 28px;
             box-shadow: var(--shadow), var(--shadow-glow), inset 0 1px 0 var(--glass-highlight);
@@ -123,9 +123,13 @@
 
         .service-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             width: 100%;
+            max-height: 52vh;
+            overflow-y: auto;
+            touch-action: pan-y;
+            padding: 2px;
         }
 
         .btn-service {
@@ -340,6 +344,30 @@
             <div class="service-grid">
                 <button class="btn-service" onclick="launchService('tung')">Tung Proxy</button>
                 <button class="btn-service" onclick="launchService('strawberii')">Strawberii</button>
+                <button class="btn-service" onclick="launchService('gust')">Gust</button>
+                <button class="btn-service" onclick="launchService('yet-again-made-by-me-phyro')">Phyro</button>
+                <button class="btn-service" onclick="launchService('bqc24')">Bqc24</button>
+                <button class="btn-service" onclick="launchService('flare')">flare</button>
+                <button class="btn-service" onclick="launchService('lunar')">Lunar</button>
+                <button class="btn-service" onclick="launchService('voya-v2')">Voya V2</button>
+                <button class="btn-service" onclick="launchService('rosin-proxy')">Rosin Proxy</button>
+                <button class="btn-service" onclick="launchService('dogeub')">dogeub</button>
+                <button class="btn-service" onclick="launchService('utopia')">Utopia</button>
+                <button class="btn-service" onclick="launchService('cherri-v2')">Cherri V2</button>
+                <button class="btn-service" onclick="launchService('fern')">Fern</button>
+                <button class="btn-service" onclick="launchService('glim')">Glim</button>
+                <button class="btn-service" onclick="launchService('interstellar')">Interstellar</button>
+                <button class="btn-service" onclick="launchService('kite')">Kite</button>
+                <button class="btn-service" onclick="launchService('studyhub')">StudyHub</button>
+                <button class="btn-service" onclick="launchService('solara')">Solara</button>
+                <button class="btn-service" onclick="launchService('aether')">Aether</button>
+                <button class="btn-service" onclick="launchService('desync')">desync</button>
+                <button class="btn-service" onclick="launchService('aurora')">Aurora</button>
+                <button class="btn-service" onclick="launchService('abstract')">Abstract</button>
+                <button class="btn-service" onclick="launchService('rook')">Rook</button>
+                <button class="btn-service" onclick="launchService('bull-33')">Bull-33</button>
+                <button class="btn-service" onclick="launchService('chess')">Chess</button>
+                <button class="btn-service" onclick="launchService('lebron-games')">Lebron Games</button>
             </div>
 
             <div class="status-container">
@@ -415,7 +443,7 @@
         });
 
         const links = {
-            tung: [
+            "tung": [
                 "https://s3.amazonaws.com/leeshawn/index.html",
                 "https://s3.us-east-1.amazonaws.com/leeshawn/index.html",
                 "https://s3.dualstack.us-east-1.amazonaws.com/leeshawn/index.html",
@@ -473,14 +501,283 @@
                 "https://s3-external-1.amazonaws.com/pinepractice/index.html",
                 "https://pinepractice.s3.amazonaws.com/index.html",
                 "https://pinepractice.s3.us-east-1.amazonaws.com/index.html",
-                "https://pinepractice.s3-external-1.amazonaws.com/index.html"
+                "https://pinepractice.s3-external-1.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/juniperdesk/index.html",
+                "https://s3.amazonaws.com/willowprep/index.html",
+                "https://juniperdesk.s3.amazonaws.com/index.html",
+                "https://djz51oelf1hfk.cloudfront.net/",
+                "https://d3ss2g5w4f61xf.cloudfront.net/",
+                "https://tungnotes.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/tungnotes/index.html",
+                "https://tungnotes.s3.us-east-1.amazonaws.com/index.svg"
             ],
-            strawberii: [
+            "strawberii": [
                 "https://s3.amazonaws.com/strawberrii/index.html",
                 "https://strawberrii.s3.amazonaws.com/index.html",
                 "https://s3.amazonaws.com/strawberrii/index.svg",
                 "https://strawberrii.s3.amazonaws.com/index.svg"
+            ],
+            "gust": [
+                "https://pear-patient-fo144.ship.place/"
+            ],
+            "yet-again-made-by-me-phyro": [
+                "https://learn878783323.boomurl.me/"
+            ],
+            "bqc24": [
+                "https://storage.googleapis.com/lilicraftzone/index.html",
+                "https://storage.googleapis.com/luminacore/index.html",
+                "https://storage.googleapis.com/vertexspace/index.html",
+                "https://s3.amazonaws.com/novacraftzone/index.html",
+                "https://s3.amazonaws.com/luminacorehi/index.html",
+                "https://s3.amazonaws.com/vertexspace/index.html"
+            ],
+            "flare": [
+                "https://flver.projectos3d.com/"
+            ],
+            "lunar": [
+                "https://lunar.sarkargroup.asia/",
+                "https://lunar.projectos3d.com/"
+            ],
+            "voya-v2": [
+                "https://ub.projectos3d.com/"
+            ],
+            "rosin-proxy": [
+                "https://betterbliss.baby/",
+                "https://ampicillin.pics/"
+            ],
+            "dogeub": [
+                "https://memorising.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/memorising/index.html",
+                "https://s3-external-1.amazonaws.com/memorising/index.html",
+                "https://h6a4.z22.web.core.windows.net/",
+                "https://shk6.z20.web.core.windows.net/",
+                "https://meqy.z21.web.core.windows.net/",
+                "https://jgjw.z19.web.core.windows.net/",
+                "https://l6zb.z22.web.core.windows.net/",
+                "https://voya.sarkargroup.asia/",
+                "https://syaf.z21.web.core.windows.net/",
+                "https://voya.projectos3d.com/"
+            ],
+            "utopia": [
+                "https://utopiaweb.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/utopiaweb/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/utopiaweb/index.html",
+                "https://utopia.projectos3d.com/"
+            ],
+            "cherri-v2": [
+                "https://chrisets.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/chrisets/math.html",
+                "https://s3.us-east-1.amazonaws.com/chrisets/index.html",
+                "https://s3.amazonaws.com/chrisets/math.html",
+                "https://s3.amazonaws.com/chrisets/index.html",
+                "https://s3.amazonaws.com/chrisets/index.svg",
+                "https://chrisets.s3.amazonaws.com/math.html",
+                "https://cdn.jsdelivr.net/gh/username9927282/cherrisvg@main/index.svg"
+            ],
+            "fern": [
+                "https://s3.amazonaws.com/bullbk/index.html",
+                "https://bullbk.s3.amazonaws.com/math.html",
+                "https://s3.amazonaws.com/frnsobk/index.svg",
+                "https://s3.us-east-1.amazonaws.com/fern-s3test/index.html",
+                "https://fern-s3test.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/fern-s3test/index.html",
+                "https://frnsobk.s3.amazonaws.com/index.svg",
+                "https://s3.amazonaws.com/frnsobk/math.html",
+                "https://frnbk.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/frnbk/index.html",
+                "https://s3.amazonaws.com/frnbk/math.html",
+                "https://frnbk.s3.amazonaws.com/index.svg",
+                "https://s3.amazonaws.com/frnbk/index.svg",
+                "https://frnsobk.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/frnsobk/index.html",
+                "https://frnsobk.s3.amazonaws.com/math.html",
+                "https://readingsets.s3.us-east-1.amazonaws.com/index.svg",
+                "https://readingsets.s3.dualstack.us-east-1.amazonaws.com/index.svg",
+                "https://readingsets.s3.amazonaws.com/index.svg",
+                "https://readingsets.s3.us-east-1.amazonaws.com/math.html",
+                "https://readingsets.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/readingsets/index.svg",
+                "https://s3.amazonaws.com/readingsets/index.svg",
+                "https://s3.amazonaws.com/readingsets/math.html",
+                "https://readingsets.s3.amazonaws.com/index.html"
+            ],
+            "glim": [
+                "https://s3.us-east-1.amazonaws.com/glimstudy/index.html",
+                "https://s3.amazonaws.com/glimstudy/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/glimstudy/index.html",
+                "https://sgt7.s3.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/axk4/index.html",
+                "https://s3.amazonaws.com/sz1n/index.html",
+                "https://ccuh.z20.web.core.windows.net/",
+                "https://u49g.z19.web.core.windows.net/",
+                "https://gjsk.z21.web.core.windows.net/"
+            ],
+            "interstellar": [
+                "https://kpkz.z21.web.core.windows.net/",
+                "https://wd2c.z16.web.core.windows.net/",
+                "https://rk6h.z28.web.core.windows.net/",
+                "https://ns8x.z33.web.core.windows.net/",
+                "https://tq4b.z27.web.core.windows.net/",
+                "https://wzf9.z19.web.core.windows.net/",
+                "https://l1q7.z21.web.core.windows.net/",
+                "https://sz8p.z20.web.core.windows.net/",
+                "https://interstellar.projectos3d.com/",
+                "https://interstellar.sarkargroup.asia/"
+            ],
+            "kite": [
+                "https://ylx0.z20.web.core.windows.net/",
+                "https://uelm.z21.web.core.windows.net/",
+                "https://mumd.z16.web.core.windows.net/",
+                "https://ltih.z27.web.core.windows.net/",
+                "https://g5ww.z33.web.core.windows.net/",
+                "https://bb4t.z21.web.core.windows.net/",
+                "https://xztx.z22.web.core.windows.net/",
+                "https://ykc6.z20.web.core.windows.net/",
+                "https://kite.projectos3d.com/",
+                "https://kite.sarkargroup.asia/"
+            ],
+            "studyhub": [
+                "https://s3.amazonaws.com/lightspeeds/index.html",
+                "https://s3.amazonaws.com/kj0e/index.html",
+                "https://s3.amazonaws.com/lumivex/index.html",
+                "https://novarix.s3.amazonaws.com/index.html",
+                "https://novarix.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/mathshelp/index.html",
+                "https://s3.us-east-1.amazonaws.com/mathshelp/index.html",
+                "https://s3.amazonaws.com/mathshelp/index.html",
+                "https://s3.amazonaws.com/studyhubapp/index.html",
+                "https://s3.us-east-1.amazonaws.com/studyhubapp/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/studyhubapp/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/tungy/index.html",
+                "https://s3.amazonaws.com/tungy/index.html",
+                "https://s3.us-east-1.amazonaws.com/tungy/index.html",
+                "https://d1bb3w1h8fhcci.cloudfront.net/",
+                "https://studyhub.projectos3d.com/"
+            ],
+            "solara": [
+                "https://s3.amazonaws.com/solaraos/index.html",
+                "https://s3.amazonaws.com/caddyprep/index.html",
+                "https://solara.sarkargroup.asia/",
+                "https://solara.projectos3d.com/"
+            ],
+            "aether": [
+                "https://s3.dualstack.us-east-1.amazonaws.com/aetherk12/study.html",
+                "https://storage.googleapis.com/yubico/study.html",
+                "https://storage.googleapis.com/synthv/study.html",
+                "https://niigo.s3-fips.dualstack.us-east-1.amazonaws.com/index.html",
+                "https://niigo.s3-fips.us-east-1.amazonaws.com/index.html",
+                "https://niigo.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/niigo/index.html",
+                "https://s3.amazonaws.com/niigo/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/niigo/index.html",
+                "https://niigo.s3.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/bedroque/index.html",
+                "https://aetherbeta.storage.googleapis.com/study.html",
+                "https://aetherinstitution.storage.googleapis.com/study.html",
+                "https://aetherschools.storage.googleapis.com/study.html",
+                "https://apresources.storage.googleapis.com/study.html",
+                "https://apushistory.storage.googleapis.com/study.html",
+                "https://bedroque.s3-fips.us-east-1.amazonaws.com/index.html",
+                "https://bedroque.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/bedroque/index.html",
+                "https://bedroque.s3.amazonaws.com/index.html"
+            ],
+            "desync": [
+                "https://desyncisthebest.b-cdn.net/",
+                "https://hardwareapplicationtutoring.b-cdn.net/",
+                "https://independentschooldistrictportal.b-cdn.net/"
+            ],
+            "aurora": [
+                "https://s3.us-east-1.amazonaws.com/quietbirchstudy/index.html",
+                "https://au.kingprawn.space/"
+            ],
+            "abstract": [
+                "https://s3.amazonaws.com/lightspeedfilters/index.html"
+            ],
+            "rook": [
+                "https://rookstudy.s3.amazonaws.com/index.svg",
+                "https://s3.amazonaws.com/rookstudy/index.svg",
+                "https://gs84jaz9xo.z19.web.core.windows.net/index.svg",
+                "https://rook.projectos3d.com/"
+            ],
+            "bull-33": [
+                "https://bullpxbk.s3.amazonaws.com/index.svg",
+                "https://bullpxbk.s3.us-east-1.amazonaws.com/index.svg",
+                "https://s3.dualstack.us-east-1.amazonaws.com/bullpxbk/index.svg",
+                "https://bullpxbk.s3.amazonaws.com/index.html",
+                "https://bullpxbk.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/bullpxbk/index.html",
+                "https://s3.us-east-1.amazonaws.com/bullpxbk/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/bullpxbk/index.html",
+                "https://bullpxbk.s3.amazonaws.com/logo.svg",
+                "https://bullpxbk.s3.us-east-1.amazonaws.com/logo.svg",
+                "https://s3.amazonaws.com/bullpxbk/logo.svg",
+                "https://s3.us-east-1.amazonaws.com/bullpxbk/logo.svg",
+                "https://s3.dualstack.us-east-1.amazonaws.com/bullpxbk/logo.svg",
+                "https://bullsobk.s3.amazonaws.com/index.svg",
+                "https://bullsobk.s3.us-east-1.amazonaws.com/index.html",
+                "https://s3.amazonaws.com/bullsobk/index.html",
+                "https://bullsobk.s3.amazonaws.com/index.html",
+                "https://s3.us-east-1.amazonaws.com/bullsobk/index.html",
+                "https://s3.dualstack.us-east-1.amazonaws.com/bullsobk/index.html",
+                "https://bullsobk.s3.amazonaws.com/logo.svg",
+                "https://bullsobk.s3.us-east-1.amazonaws.com/logo.svg",
+                "https://s3.amazonaws.com/bullsobk/logo.svg"
+            ],
+            "chess": [
+                "https://eeedenj2wlkfdblsdnbf.my.canva.site/educational-chess-games-to-develop-your-frontal-lobe-729385069127759"
+            ],
+            "lebron-games": [
+                "https://goodreads-com-61271823-lebronbiography.boomurl.me/",
+                "https://codehs.com/sandbox/maroonpigeon8020/html?tab=output",
+                "https://www.sololearn.com/en/compiler-playground/WtwnSQDeHG3S",
+                "https://cubic-balance-loiq8.ship.place/",
+                "https://shared-wallaby-aruy8.ship.place/",
+                "https://wise-process-m12bi.ship.place/",
+                "https://www.sololearn.com/en/compiler-playground/WxpW4RAy39Nd",
+                "https://www.sololearn.com/en/compiler-playground/WjbM73M2S3DM",
+                "https://www.sololearn.com/en/compiler-playground/WE1dTOf9cCzN",
+                "https://pebble-hat-l4beh.ship.place/",
+                "https://www.sololearn.com/en/compiler-playground/Wy0b717yJfv0",
+                "https://www.sololearn.com/en/compiler-playground/WVi5c5A4JgSB",
+                "https://deluxe-price-2x4fm.ship.place/",
+                "https://silver-orbit-pt9h.view.miinideck.com/home-classroom-BYEpHNaw8o6b3S25vE8zEsdmyzHlYovS",
+                "https://silver-orbit-pt9h.view.miinideck.com/open-home-classroom-Mp40Hq3SV8tAoxYYUGWgGdaY5HGIMArg",
+                "https://silver-orbit-pt9h.view.miinideck.com/home-classroom-lxS3bTNsZaAa7wcbW0avAa8gPnHZ85Tw",
+                "https://codehs.com/sandbox/maroonpigeon8020/new-sandbox-program-1",
+                "https://codehs.com/sandbox/maroonpigeon8020/new-sandbox-program-2",
+                "https://codehs.com/sandbox/maroonpigeon8020/new-sandbox-program-3",
+                "https://codehs.com/sandbox/maroonpigeon8020/new-sandbox-program-4"
             ]
+        };
+
+        const serviceNames = {
+            "tung": "Tung Proxy",
+            "strawberii": "Strawberii",
+            "gust": "Gust",
+            "yet-again-made-by-me-phyro": "Phyro",
+            "bqc24": "Bqc24",
+            "flare": "flare",
+            "lunar": "Lunar",
+            "voya-v2": "Voya V2",
+            "rosin-proxy": "Rosin Proxy",
+            "dogeub": "dogeub",
+            "utopia": "Utopia",
+            "cherri-v2": "Cherri V2",
+            "fern": "Fern",
+            "glim": "Glim",
+            "interstellar": "Interstellar",
+            "kite": "Kite",
+            "studyhub": "StudyHub",
+            "solara": "Solara",
+            "aether": "Aether",
+            "desync": "desync",
+            "aurora": "Aurora",
+            "abstract": "Abstract",
+            "rook": "Rook",
+            "bull-33": "Bull-33",
+            "chess": "Chess",
+            "lebron-games": "Lebron Games"
         };
 
         let currentActiveUrl = "";
@@ -519,7 +816,7 @@
 
             if (workingUrl) {
                 currentActiveUrl = workingUrl;
-                currentServiceName = serviceType === 'tung' ? 'Tung Proxy' : 'Strawberii';
+                currentServiceName = serviceNames[serviceType];
                 document.getElementById("selection-screen").style.display = "none";
                 document.getElementById("app-view").style.display = "flex";
                 document.getElementById("proxy-frame").src = workingUrl;
